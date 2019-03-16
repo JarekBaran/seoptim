@@ -51,13 +51,14 @@ program
   .option('--webp')
   .parse(process.argv);
 
-if (program.gif) gif();
-if (program.png) png();
-if (program.jpg) jpg();
-if (program.guetzli) guetzli();
-if (program.svg) svg();
-if (program.webp) webp();
-else seoptim();
+  if (program.gif) gif();
+  if (program.png) png();
+  if (program.jpg) jpg();
+  if (program.guetzli) guetzli();
+  if (program.svg) svg();
+  if (program.webp) webp();
+  if (process.argv.length === 2) seoptim();
+
 
 console.log("Output folder: " + output );
 
