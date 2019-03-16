@@ -13,15 +13,15 @@ const imageminWebp = require('imagemin-webp');
 const folder = process.platform === "win32" ? "C:\SEOptim\\" : process.env.HOME + "/SEOptim/";
 const output = folder + new Date().toISOString().slice(0,16).replace(/[^0-9]/g, "-");
 
-const gif = () => src("src/**/*.gif")
+const gif = () => src("**/*.gif")
   .pipe(imagemin([imageminGifsicle({ interlaced: true, optimizationLevel: 3 })], { verbose: true }))
   .pipe(dest(output));
 
-const png = () => src("src/**/*.png")
+const png = () => src("**/*.png")
   .pipe(imagemin([imageminPngquant({ quality: [0.5, 0.7] })], { verbose: true }))
   .pipe(dest(output));
 
-const jpg = () => src("src/**/*.{jpg,jpeg}")
+const jpg = () => src("**/*.{jpg,jpeg}")
   .pipe(imagemin([imageminMozjpeg({
     quality: 75,
     progressive: true,
@@ -35,15 +35,15 @@ const jpg = () => src("src/**/*.{jpg,jpeg}")
   })], { verbose: true }))
   .pipe(dest(output));
 
-const guetzli = () => src("src/**/*.{jpg,jpeg}")
+const guetzli = () => src("**/*.{jpg,jpeg}")
   .pipe(imagemin([imageminGuetzli({ quality: 80 })], { verbose: true }))
   .pipe(dest(output));
 
-const svg = () => src("src/**/*.svg")
+const svg = () => src("**/*.svg")
   .pipe(imagemin([imageminSvgo()], { verbose: true }))
   .pipe(dest(output));
 
-const webp = () => src("src/**/*.{png,jpg,jpeg,svg}")
+const webp = () => src("**/*.{png,jpg,jpeg,svg}")
   .pipe(imagemin([imageminWebp({ lossless: true })], { verbose: true }))
   .pipe(dest(output));
 
