@@ -13,6 +13,7 @@
     "commander": "^2.19.0",
     "gulp": "^4.0.0",
     "gulp-imagemin": "^5.0.3",
+    "gulp-rename": "^1.4.0",
     "imagemin-gifsicle": "^6.0.1",
     "imagemin-guetzli": "^2.0.0",
     "imagemin-mozjpeg": "^8.0.0",

@@ -2,6 +2,7 @@
 
 const program = require('commander');
 const { src, dest, series, parallel } = require("gulp");
+const rename = require('gulp-rename');
 const imagemin = require("gulp-imagemin");
 const imageminGifsicle = require('imagemin-gifsicle');
 const imageminPngquant = require('imagemin-pngquant');
@@ -23,21 +24,22 @@ const png = () => src("**/*.png")
 
 const jpg = () => src("**/*.{jpg,jpeg}")
   .pipe(imagemin([imageminMozjpeg({
-    quality: 80,
+    quality: 75,
     progressive: true
   })], { verbose: true }))
   .pipe(dest(output));
 
 const guetzli = () => src("**/*.{jpg,jpeg}")
-  .pipe(imagemin([imageminGuetzli({ quality: 85 })], { verbose: true }))
+  .pipe(imagemin([imageminGuetzli({ quality: 80 })], { verbose: true }))
   .pipe(dest(output));
 
 const svg = () => src("**/*.svg")
   .pipe(imagemin([imageminSvgo()], { verbose: true }))
   .pipe(dest(output));
 
-const webp = () => src("**/*.{png,jpg,jpeg,svg}")
+const webp = () => src("**/*.{png,jpg,jpeg}")
   .pipe(imagemin([imageminWebp({ lossless: true })], { verbose: true }))
+  .pipe(rename({ extname: '.webp' }))
   .pipe(dest(output));
 
 const seoptim = parallel(png, jpg);
