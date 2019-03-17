@@ -1,19 +1,20 @@
-SEO Optimization Tool
+# SEO Optimization Tool
 
-Setup:
+### Setup:
 npm install
+
+npm install -g
+
 npm link
 
-Run:
+### Run:
 seoptim
-or
-seoptim --gif
-seoptim --png
-seoptim --jpg
-seoptim --guetzli
-seoptim --svg
-seoptim --webp
 
-Files output folder:
-Win: C:\SEOptim\YEAR-MONTH-DAY-HOUR-MINUTES\*
-Linux: /home/USER_HOME/SEOptim/*
+or
+
+seoptim --help
+
+### Files output folder:
+Windows: C:\SEOptim\YEAR-MONTH-DAY-HOUR-MINUTES\
+
+Linux: /home/USER_HOME/SEOptim/YEAR-MONTH-DAY-HOUR-MINUTES/
