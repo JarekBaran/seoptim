@@ -18,6 +18,7 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGuetzli = require("imagemin-guetzli");
+const imageminZopfli = require('imagemin-zopfli');
 const imageminSvgo = require("imagemin-svgo");
 const imageminWebp = require("imagemin-webp");
 // config
@@ -85,6 +86,12 @@ const guetzli = () => src("**/*.{jpg,jpeg}")
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
+const zopfli = () => src("**/*.png")
+  .pipe(plumber())
+  .pipe(imagemin([imageminZopfli({ more: true })], { verbose: true }))
+  .pipe(size({ showFiles: true }))
+  .pipe(dest(output));
+
 const svg = () => src("**/*.svg")
   .pipe(plumber())
   .pipe(imagemin([imageminSvgo()], { verbose: true }))
@@ -104,7 +111,8 @@ program
   .option("--gif")
   .option("--png")
   .option("--jpg")
-  .option("--guetzli")
+  .option("--guetzli", "JPG/JPEG")
+  .option("--zopfli", "PNG")
   .option("--svg")
   .option("--webp")
   .option("--html")
@@ -118,6 +126,7 @@ program
   if (program.png) png();
   if (program.jpg) jpg();
   if (program.guetzli) guetzli();
+  if (program.zopfli) zopfli();
   if (program.svg) svg();
   if (program.webp) webp();
   if (program.html) html();
