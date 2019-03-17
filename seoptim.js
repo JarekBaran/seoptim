@@ -18,9 +18,10 @@ const imageminGifsicle = require("imagemin-gifsicle");
 const imageminPngquant = require("imagemin-pngquant");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminGuetzli = require("imagemin-guetzli");
-const imageminZopfli = require('imagemin-zopfli');
+const imageminZopfli = require("imagemin-zopfli");
 const imageminSvgo = require("imagemin-svgo");
 const imageminWebp = require("imagemin-webp");
+const gulpTinyPng = require("gulp-tinypng-unlimited");
 // config
 const folder = process.platform === "win32" ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
 const output = folder + new Date().toISOString().slice(0,16).replace(/[^0-9]/g, "-");
@@ -71,6 +72,12 @@ const png = () => src("**/*.png")
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
+const tinypng = () => src("**/*.{png,jpg,jpeg}")
+  .pipe(plumber())
+  .pipe(gulpTinyPng())
+  .pipe(size({ showFiles: true }))
+  .pipe(dest(output));
+
 const jpg = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
   .pipe(imagemin([imageminMozjpeg({
@@ -98,7 +105,7 @@ const svg = () => src("**/*.svg")
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
-const webp = () => src("**/*.{png,jpg,jpeg}")
+const webp = () => src("**/*.{png,jpg,jpeg,gif,webp}")
   .pipe(plumber())
   .pipe(imagemin([imageminWebp({ lossless: true })], { verbose: true }))
   .pipe(rename({ extname: ".webp" }))
@@ -108,18 +115,19 @@ const webp = () => src("**/*.{png,jpg,jpeg}")
 const seoptim = parallel(png, jpg);
 
 program
-  .option("--gif")
-  .option("--png")
-  .option("--jpg")
-  .option("--guetzli", "JPG/JPEG")
-  .option("--zopfli", "PNG")
-  .option("--svg")
-  .option("--webp")
-  .option("--html")
-  .option("--css")
-  .option("--js")
-  .option("--scss")
-  .option("--less")
+.option("--png")
+.option("--jpg")
+.option("--gif")
+.option("--svg")
+.option("--html")
+.option("--css")
+.option("--js")
+.option("--webp", "PNG/JPG/JPEG/GIF/WEBP")
+.option("--tinypng", "PNG/JPG/JPEG")
+.option("--guetzli", "JPG/JPEG")
+.option("--zopfli", "PNG")
+.option("--less", "CSS")
+.option("--scss", "CSS")
   .parse(process.argv);
 
   if (program.gif) gif();
@@ -127,11 +135,12 @@ program
   if (program.jpg) jpg();
   if (program.guetzli) guetzli();
   if (program.zopfli) zopfli();
+  if (program.tinypng) tinypng();
   if (program.svg) svg();
   if (program.webp) webp();
   if (program.html) html();
-  if (program.css) css();
   if (program.js) js();
+  if (program.css) css();
   if (program.scss) scss();
   if (program.less) less();
   if (process.argv.length === 2) seoptim();
