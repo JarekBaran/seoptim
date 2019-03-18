@@ -10,7 +10,6 @@ const htmlClean = require("gulp-htmlclean");
 const gulpSass = require("gulp-sass");
 const gulpLess = require("gulp-less");
 const cssNano = require("gulp-cssnano");
-const concat = require("gulp-concat");
 const uglify = require("gulp-uglify");
 // image
 const imagemin = require("gulp-imagemin");
@@ -23,7 +22,6 @@ const imageminSvgo = require("imagemin-svgo");
 const imageminWebp = require("imagemin-webp");
 const gulpTinyPng = require("gulp-tinypng-unlimited");
 // config
-const exec = require('child_process').exec;
 const windows = /^win/.test(process.platform);
 const folder = windows ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
 const output = folder + new Date().toISOString().slice(0,19).replace(/[^0-9]/g, "-");
@@ -147,14 +145,5 @@ program
   if (program.less) less();
   if (process.argv.length === 2) seoptim();
 
-
 console.log("Output folder: " + output );
-
-exec((windows ? 'start ' : 'open ') + output,
-    function (error, stdout, stderr) {
-        if (error !== null) {
-            console.log('exec error: ' + error);
-        }
-    }
-);
 
