@@ -23,8 +23,10 @@ const imageminSvgo = require("imagemin-svgo");
 const imageminWebp = require("imagemin-webp");
 const gulpTinyPng = require("gulp-tinypng-unlimited");
 // config
-const folder = process.platform === "win32" ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
-const output = folder + new Date().toISOString().slice(0,16).replace(/[^0-9]/g, "-");
+const exec = require('child_process').exec;
+const windows = /^win/.test(process.platform);
+const folder = windows ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
+const output = folder + new Date().toISOString().slice(0,19).replace(/[^0-9]/g, "-");
 
 const html = () => src("**/*.{htm,html}")
   .pipe(plumber())
@@ -81,7 +83,7 @@ const tinypng = () => src("**/*.{png,jpg,jpeg}")
 const jpg = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
   .pipe(imagemin([imageminMozjpeg({
-    quality: 75,
+    quality: 80,
     progressive: true
   })], { verbose: true }))
   .pipe(size({ showFiles: true }))
@@ -89,7 +91,7 @@ const jpg = () => src("**/*.{jpg,jpeg}")
 
 const guetzli = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
-  .pipe(imagemin([imageminGuetzli({ quality: 80 })], { verbose: true }))
+  .pipe(imagemin([imageminGuetzli({ quality: 85 })], { verbose: true }))
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
@@ -147,4 +149,12 @@ program
 
 
 console.log("Output folder: " + output );
+
+exec((windows ? 'start ' : 'open ') + output,
+    function (error, stdout, stderr) {
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+    }
+);
 
