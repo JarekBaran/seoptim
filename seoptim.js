@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const fs = require("fs");
+const openExplorer = require('open-file-explorer');
 
 const { src, dest, series, parallel } = require("gulp");
 const rename = require("gulp-rename");
@@ -25,6 +27,13 @@ const gulpTinyPng = require("gulp-tinypng-unlimited");
 const windows = /^win/.test(process.platform);
 const folder = windows ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
 const output = folder + new Date().toISOString().slice(0,19).replace(/[^0-9]/g, "-");
+
+const createDir = () => fs.mkdir(output, {recursive: true}, err => {});
+
+const openDir = () => {
+  openExplorer(output);
+  console.log("Output folder: " + output );
+}
 
 const html = () => src("**/*.{htm,html}")
   .pipe(plumber())
@@ -81,7 +90,7 @@ const tinypng = () => src("**/*.{png,jpg,jpeg}")
 const jpg = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
   .pipe(imagemin([imageminMozjpeg({
-    quality: 80,
+    quality: 78,
     progressive: true
   })], { verbose: true }))
   .pipe(size({ showFiles: true }))
@@ -89,7 +98,7 @@ const jpg = () => src("**/*.{jpg,jpeg}")
 
 const guetzli = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
-  .pipe(imagemin([imageminGuetzli({ quality: 85 })], { verbose: true }))
+  .pipe(imagemin([imageminGuetzli({ quality: 80 })], { verbose: true }))
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
@@ -128,22 +137,19 @@ program
 .option("--zopfli", "PNG")
 .option("--less", "CSS")
 .option("--scss", "CSS")
-  .parse(process.argv);
+.parse(process.argv);
 
-  if (program.gif) gif();
-  if (program.png) png();
-  if (program.jpg) jpg();
-  if (program.guetzli) guetzli();
-  if (program.zopfli) zopfli();
-  if (program.tinypng) tinypng();
-  if (program.svg) svg();
-  if (program.webp) webp();
-  if (program.html) html();
-  if (program.js) js();
-  if (program.css) css();
-  if (program.scss) scss();
-  if (program.less) less();
-  if (process.argv.length === 2) seoptim();
-
-console.log("Output folder: " + output );
-
+if (program.gif) {createDir(); gif(); openDir();}
+if (program.png) {createDir(); png(); openDir();}
+if (program.jpg) {createDir(); jpg(); openDir();}
+if (program.guetzli) {createDir(); guetzli(); openDir();}
+if (program.zopfli) {createDir(); zopfli(); openDir();}
+if (program.tinypng) {createDir(); tinypng(); openDir();}
+if (program.svg) {createDir(); svg(); openDir();}
+if (program.webp) {createDir(); webp(); openDir();}
+if (program.html) {createDir(); html(); openDir();}
+if (program.js) {createDir(); js(); openDir();}
+if (program.css) {createDir(); css(); openDir();}
+if (program.scss) {createDir(); scss(); openDir();}
+if (program.less) {createDir(); less(); openDir();}
+if (process.argv.length === 2) {createDir(); seoptim(); openDir();}
