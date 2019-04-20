@@ -131,35 +131,36 @@ const optimize = (method) => {
 const seoptim = async () => {
 
   program
-  .option("--png")
-  .option("--jpg")
-  .option("--gif")
-  .option("--svg")
-  .option("--html")
-  .option("--css")
-  .option("--js")
-  .option("--webp")
-  .option("--tinypng", "PNG/JPG/JPEG")
-  .option("--guetzli", "JPG/JPEG")
-  .option("--zopfli", "PNG")
-  .option("--less", "CSS")
-  .option("--scss", "CSS")
+  .version('1.0.0')
+  .option("-p, --png")
+  .option("-j, --jpg")
+  .option("-g, --gif")
+  .option("-s, --svg")
+  .option("-h, --html")
+  .option("-c, --css")
+  .option("-js, --js")
+  .option("-w, --webp")
+  .option("-t, --tinypng", "PNG/JPG/JPEG")
+  .option("-q, --guetzli", "JPG/JPEG")
+  .option("-z, --zopfli", "PNG")
+  .option("-l, --less", "CSS")
+  .option("-sc, --scss", "CSS")
   .parse(process.argv);
 
   if (program.gif) return await optimize(gif).then(openDir());
-  if (program.png) return optimize(png).then(openDir());
-  if (program.jpg) return optimize(jpg).then(openDir());
-  if (program.guetzli) return optimize(guetzli).then(openDir());
-  if (program.zopfli) return optimize(zopfli).then(openDir());
-  if (program.tinypng) return optimize(tinypng).then(openDir());
-  if (program.svg) return optimize(svg).then(openDir());
-  if (program.webp) return optimize(webp).then(openDir());
-  if (program.html) return optimize(html).then(openDir());
-  if (program.js) return optimize(js).then(openDir());
-  if (program.css) return optimize(css).then(openDir());
-  if (program.scss) return optimize(scss).then(openDir());
-  if (program.less) return optimize(less).then(openDir());
-  if (process.argv.length === 2) return optimize(standard).then(openDir());
+  else if (program.png) return optimize(png).then(openDir());
+  else if (program.jpg) return optimize(jpg).then(openDir());
+  else if (program.guetzli) return optimize(guetzli).then(openDir());
+  else if (program.zopfli) return optimize(zopfli).then(openDir());
+  else if (program.tinypng) return optimize(tinypng).then(openDir());
+  else if (program.svg) return optimize(svg).then(openDir());
+  else if (program.webp) return optimize(webp).then(openDir());
+  else if (program.html) return optimize(html).then(openDir());
+  else if (program.js) return optimize(js).then(openDir());
+  else if (program.css) return optimize(css).then(openDir());
+  else if (program.scss) return optimize(scss).then(openDir());
+  else if (program.less) return optimize(less).then(openDir());
+  else if (process.argv.length === 2) return optimize(standard).then(openDir());
 }
 
 seoptim();
