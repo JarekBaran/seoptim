@@ -28,13 +28,6 @@ const windows = /^win/.test(process.platform);
 const folder = windows ? "C:\\SEOptim\\" : process.env.HOME + "/SEOptim/";
 const output = folder + new Date().toISOString().slice(0,19).replace(/[^0-9]/g, "-");
 
-const createDir = () => fs.mkdir(output, {recursive: true}, err => {});
-
-const openDir = () => {
-  openExplorer(output);
-  console.log("Output folder: " + output );
-}
-
 const html = () => src("**/*.{htm,html}")
   .pipe(plumber())
   .pipe(htmlClean())
@@ -121,35 +114,52 @@ const webp = () => src("**/*.{png,jpg,jpeg,gif,webp}")
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
-const seoptim = parallel(png, jpg);
+const standard = parallel(png, jpg, gif);
 
-program
-.option("--png")
-.option("--jpg")
-.option("--gif")
-.option("--svg")
-.option("--html")
-.option("--css")
-.option("--js")
-.option("--webp", "PNG/JPG/JPEG/GIF/WEBP")
-.option("--tinypng", "PNG/JPG/JPEG")
-.option("--guetzli", "JPG/JPEG")
-.option("--zopfli", "PNG")
-.option("--less", "CSS")
-.option("--scss", "CSS")
-.parse(process.argv);
+const openDir = () => {
+  openExplorer(output);
+  console.log("Output folder: " + output );
+}
 
-if (program.gif) {createDir(); gif(); openDir();}
-if (program.png) {createDir(); png(); openDir();}
-if (program.jpg) {createDir(); jpg(); openDir();}
-if (program.guetzli) {createDir(); guetzli(); openDir();}
-if (program.zopfli) {createDir(); zopfli(); openDir();}
-if (program.tinypng) {createDir(); tinypng(); openDir();}
-if (program.svg) {createDir(); svg(); openDir();}
-if (program.webp) {createDir(); webp(); openDir();}
-if (program.html) {createDir(); html(); openDir();}
-if (program.js) {createDir(); js(); openDir();}
-if (program.css) {createDir(); css(); openDir();}
-if (program.scss) {createDir(); scss(); openDir();}
-if (program.less) {createDir(); less(); openDir();}
-if (process.argv.length === 2) {createDir(); seoptim(); openDir();}
+const optimize = (method) => {
+  return new Promise((resolve, reject) => {
+    fs.mkdir(output, {recursive: true}, err => {});
+    resolve(method());
+  })
+}
+
+const seoptim = async () => {
+
+  program
+  .option("--png")
+  .option("--jpg")
+  .option("--gif")
+  .option("--svg")
+  .option("--html")
+  .option("--css")
+  .option("--js")
+  .option("--webp")
+  .option("--tinypng", "PNG/JPG/JPEG")
+  .option("--guetzli", "JPG/JPEG")
+  .option("--zopfli", "PNG")
+  .option("--less", "CSS")
+  .option("--scss", "CSS")
+  .parse(process.argv);
+
+  if (program.gif) return await optimize(gif).then(openDir());
+  if (program.png) return optimize(png).then(openDir());
+  if (program.jpg) return optimize(jpg).then(openDir());
+  if (program.guetzli) return optimize(guetzli).then(openDir());
+  if (program.zopfli) return optimize(zopfli).then(openDir());
+  if (program.tinypng) return optimize(tinypng).then(openDir());
+  if (program.svg) return optimize(svg).then(openDir());
+  if (program.webp) return optimize(webp).then(openDir());
+  if (program.html) return optimize(html).then(openDir());
+  if (program.js) return optimize(js).then(openDir());
+  if (program.css) return optimize(css).then(openDir());
+  if (program.scss) return optimize(scss).then(openDir());
+  if (program.less) return optimize(less).then(openDir());
+  if (process.argv.length === 2) return optimize(standard).then(openDir());
+}
+
+seoptim();
