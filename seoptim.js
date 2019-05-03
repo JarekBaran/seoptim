@@ -91,7 +91,7 @@ const jpg = () => src("**/*.{jpg,jpeg}")
 
 const guetzli = () => src("**/*.{jpg,jpeg}")
   .pipe(plumber())
-  .pipe(imagemin([imageminGuetzli({ quality: 80 })], { verbose: true }))
+  .pipe(imagemin([imageminGuetzli({ quality: 85 })], { verbose: true }))
   .pipe(size({ showFiles: true }))
   .pipe(dest(output));
 
