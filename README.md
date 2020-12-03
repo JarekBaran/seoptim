@@ -1,4 +1,4 @@
-# SEO Optimization Tool
+# SEO Optimization Tool for images (Gulp.js, Terminal)
 
 Go to home/pwd folder in terminal
 
